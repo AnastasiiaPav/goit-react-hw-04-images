@@ -1,5 +1,4 @@
 import propTypes from 'prop-types';
-import { func } from 'prop-types';
 
 import { AllButton } from "./App.styled"
 
@@ -12,5 +11,5 @@ import { AllButton } from "./App.styled"
  }
 
 Button.propTypes = {
-    onClick: func,
+    onClick: propTypes.func,
 }
