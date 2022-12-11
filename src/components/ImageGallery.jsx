@@ -1,18 +1,11 @@
-import { Component } from 'react';
 import { Button } from './Button';
 import { ImageGalleryItem } from './ImageGalleryItem';
 import { Loader } from './Loader';
 import { FlexImg, DivGallery } from './App.styled';
 import propTypes from 'prop-types';
 
-export class ImageGallery extends Component {
-  render() {
-    const { gallery, onShowMore, status } = this.props;
-    
-    // if (status === 'pending') {
-    //   return <Loader />;
-    // }
-    
+export const ImageGallery =({ gallery, onShowMore, status}) =>  {
+
     if (status === 'ok' || status === 'pending' ) {
       return (
         <DivGallery>
@@ -33,7 +26,6 @@ export class ImageGallery extends Component {
       );
     }
   }
-}
 
 ImageGallery.propTypes = {
   gallery: propTypes.arrayOf(

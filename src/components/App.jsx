@@ -1,64 +1,57 @@
 import { fetchImages } from 'ApiImg';
-import { Component } from 'react';
+import { useState,useEffect } from 'react';
 import { ImageGallery } from './ImageGallery';
 import { SearchBar } from './Searchbar';
 
-export class App extends Component {
-  state = {
-    searchReq: '',
-    page: 1,
-    gallery: [],
-    status: 'idle',
-    error: null,
-  };
-
-  componentDidUpdate(prewProps, prevState) {
-    // const hits = data.hits;
-    const { searchReq, gallery, page } = this.state;
-    if (prevState.searchReq !== searchReq || prevState.page !== page) {
-      this.setState({status: 'pending'})
-      fetchImages(searchReq, page)
-        .then(res => res.json())
-        .then(data => {
-          this.setState({ status: 'ok'})
-          const hits = data.hits;
-          this.setState({ gallery: prevState.searchReq !== searchReq ? [...hits] : [...gallery, ...hits] });
-          // this.setState ({gallery: hits})
-
-          if (hits.length === 0) {
-            return Promise.reject(
-              new Error(`We can't find pictures with ${searchReq}`)
-            );
-          }
-        });
-    }
+export const App = () => {
+  const [searchReq , setsearchReq] = useState('')
+  const [ page, setPage] = useState(1)
+  const [gallery, setGallyry] = useState([])
+  const [ status, setStatus] = useState('idle')
+useEffect(() => {
+  if(!searchReq){
+    return
   }
+  setStatus('pending')
+  fetchImages(searchReq, page)
+          .then(res => res.json())
+          .then(data => {
+            const hits = data.hits;
+          setGallyry([...gallery, ...hits]);
+            setStatus('ok')
+          
+  
+            if (hits.length === 0) {
+              return Promise.reject(
+                new Error(`We can't find pictures with ${searchReq}`)
+              );
+            }})
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [searchReq, page])
 
-  onShowMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-    // window.scrollTo(0,document.body.scrollHeight)
+ const onShowMore = () => {
+  setPage(prevState => (
+       prevState + 1
+    ));
   };
 
-  onSearchSubmit = querty => {
-    console.log(querty);
-    this.setState({
-      searchReq: querty,
-      page: 1,
-    });
+ const onSearchSubmit = querty => {
+    setsearchReq(querty)
+    setPage(1)
+    setGallyry([])
+
   };
 
-  render() {
+
     return (
       <div>
-        <SearchBar onSubmit={this.onSearchSubmit} />
+        <SearchBar onSubmit={onSearchSubmit} />
         <ImageGallery
-          status={this.state.status}
-          gallery={this.state.gallery}
-          onShowMore={this.onShowMore}
+          status={status}
+          gallery={gallery}
+          onShowMore={onShowMore}
         />
       </div>
     );
   }
-}
+

@@ -1,54 +1,52 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import propTypes from 'prop-types';
 import { Input, SearchForm, AllButton } from './App.styled';
 
-export class SearchBar extends Component {
-  state = {
-    search: '',
-  };
+export const SearchBar= ({onSubmit}) => {
+  const [search, setSearch] = useState('')
 
-  onFormSubmit = event => {
+
+ const onFormSubmit = event => {
     event.preventDefault();
-    if (this.state.search.trim() === '') {
+    if (search.trim() === '') {
       alert('Please, write what pictures you want to see');
       return;
     }
-    this.props.onSubmit(this.state.search);
-    this.reset();
+  onSubmit(search);
+   reset();
     window.scrollTo(0,1);
 
   };
 
-  onInputChange = event => {
-    this.setState({ search: event.target.value });
+const  onInputChange = event => {
+    setSearch( event.target.value.toLowerCase());
   };
 
-  reset() {
-    this.setState({ search: '' });
+ const reset = () => {
+    setSearch('');
   }
 
-  render() {
+ 
     return (
       <header className="searchbar">
-        <SearchForm onSubmit={this.onFormSubmit}>
+        <SearchForm onSubmit={onFormSubmit}>
           <AllButton type="submit" className="button">
             <span className="button-label">Search</span>
           </AllButton>
 
           <Input
             className="input"
-            value={this.state.search}
+            value={search}
             type="text"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            onChange={this.onInputChange}
+            onChange={onInputChange}
           />
         </SearchForm>
       </header>
     );
   }
-}
 
 SearchBar.propTypes = {
   onSubmit: propTypes.func,
